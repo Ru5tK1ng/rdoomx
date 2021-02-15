@@ -254,6 +254,7 @@ public:
 
 	argb_t		blend_color;			// blend color for the sector the player is in
 	bool		doreborn;
+	int			unblockspawn;			// [RK] Used to avoid ally spawn telefragging in coop
 
 	byte        QueuePosition;            //Queue position to join game. 0 means not in queue
 

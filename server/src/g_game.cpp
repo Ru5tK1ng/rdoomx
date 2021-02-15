@@ -310,7 +310,7 @@ bool G_CheckSpot (player_t &player, mapthing2_t *mthing)
 	bool valid_position = P_CheckPosition(player.mo, x, y);
 	player.mo->flags &= ~MF_SOLID;
 	player.mo->z = oldz;	// [RH] Restore corpse's height
-	if (!valid_position)
+	if (!valid_position && player.unblockspawn == 0)
 		return false;
 
 	// spawn a teleport fog
@@ -568,6 +568,10 @@ void G_DoReborn (player_t &player)
 {
 	if(!serverside)
 		return;
+
+	// [RK] If we're in coop we'll set unblock spawn to prevent spawn fragging
+	if(sv_gametype == GM_COOP)
+		player.unblockspawn = 1;
 
 	// respawn at the start
 	// first disassociate the corpse

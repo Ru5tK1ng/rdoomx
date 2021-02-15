@@ -127,8 +127,15 @@ BOOL PIT_StompThing (AActor *thing)
 		return true;
 
 	// Unblocked players shouldn't telefrag friendlies.  Thanks Amateur Spammer!
-	if (tmthing->player && thing->player && sv_unblockplayers)
+	// [RK] If sv_unblockplayers isn't on, we still don't want to kill allies in coop
+	if ((tmthing->player && thing->player) && (sv_unblockplayers || tmthing->player->unblockspawn))
+	{
+		// [RK] Player is not alone an is colliding with something
+		tmthing->player->unblockspawn = 2;
+		thing->player->unblockspawn = 2;
+
 		return true;
+	}
 
 	// don't clip against self
 	if (thing == tmthing)
@@ -510,8 +517,16 @@ static BOOL PIT_CheckThing (AActor *thing)
 		(tmthing->player && tmthing->player->spectator))
 		return true;
 
-	if (tmthing->player && thing->player && sv_unblockplayers)
+	// [RK] In coop games, we don't want to get stuck inside allies
+	if ((tmthing->player && thing->player) &&
+	    (sv_unblockplayers || tmthing->player->unblockspawn || thing->player->unblockspawn))
+	{
+		// [RK] Player is not alone an is colliding with something
+		tmthing->player->unblockspawn = 2;
+		thing->player->unblockspawn = 2;
+
 		return true;
+	}
 
 	fixed_t blockdist = thing->radius + tmthing->radius;
 	if (abs(thing->x - tmx) >= blockdist || abs(thing->y - tmy) >= blockdist)
@@ -862,9 +877,9 @@ bool P_CheckPosition (AActor *thing, fixed_t x, fixed_t y)
 	else
 	{
 		// vanilla Doom's check for blocking things
-		for (int bx=xl ; bx<=xh ; bx++)
-			for (int by=yl ; by<=yh ; by++)
-				if (!P_BlockThingsIterator(bx,by,PIT_CheckThing))
+		for (int bx = xl; bx <= xh; bx++)
+			for (int by = yl; by <= yh; by++)
+				if (!P_BlockThingsIterator(bx, by, PIT_CheckThing))
 					return false;
 
 		if (tmflags & MF_NOCLIP)
@@ -884,7 +899,7 @@ bool P_CheckPosition (AActor *thing, fixed_t x, fixed_t y)
 
 	if (co_realactorheight)
 		return (BlockingMobj = thingblocker) == NULL;
-
+	
 	return true;
 }
 

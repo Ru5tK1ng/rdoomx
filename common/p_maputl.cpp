@@ -717,11 +717,19 @@ BOOL P_BlockThingsIterator (int x, int y, BOOL(*func)(AActor*), AActor *actor)
 	else
  	{
 		AActor *mobj = (actor != NULL ? actor : blocklinks[y*bmapwidth+x]);
+
 		while (mobj)
  		{
  			if (!func (mobj))
  				return false;
 
+			// [RK] Resolve if the player ran any PIT checks against allies
+			if (mobj->player != NULL && mobj->player->unblockspawn != 0)
+				if (mobj->player->unblockspawn == 1)
+					mobj->player->unblockspawn = 0;
+				else
+					mobj->player->unblockspawn = 1;			//Clear for the next check
+			
 			mobj = mobj->bmapnode.Next(x, y);
 		}
 	}
