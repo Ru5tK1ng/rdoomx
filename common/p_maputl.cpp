@@ -724,11 +724,11 @@ BOOL P_BlockThingsIterator (int x, int y, BOOL(*func)(AActor*), AActor *actor)
  				return false;
 
 			// [RK] Resolve if the player ran any PIT checks against allies
-			if (mobj->player != NULL && mobj->player->unblockspawn != 0)
-				if (mobj->player->unblockspawn == 1)
-					mobj->player->unblockspawn = 0;
+			if (mobj->player != NULL && mobj->player->unblockspawn != Unblock_Cleared)
+				if (mobj->player->unblockspawn == Unblock_Ready)
+					mobj->player->unblockspawn = Unblock_Cleared;
 				else
-					mobj->player->unblockspawn = 1;			//Clear for the next check
+					mobj->player->unblockspawn = Unblock_Ready; // Clear for the next check
 			
 			mobj = mobj->bmapnode.Next(x, y);
 		}

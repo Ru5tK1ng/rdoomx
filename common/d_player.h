@@ -114,6 +114,21 @@ typedef enum
 	CF_REVERTPLEASE		= 128
 } cheat_t;
 
+//
+// Used to avoid ally spawn telefragging in coop
+//
+typedef enum
+{
+	// No longer colliding with an ally after spawn
+	Unblock_Cleared,
+
+	// Spawned and ready for any checks
+	Unblock_Ready,
+
+	// Actor was checked and now awaiting for the next call
+	Unblock_Checked,
+} unblockspawn_t;
+
 #define MAX_PLAYER_SEE_MOBJ	0x7F
 
 static const int ReJoinDelay = TICRATE * 5;
@@ -254,7 +269,8 @@ public:
 
 	argb_t		blend_color;			// blend color for the sector the player is in
 	bool		doreborn;
-	int			unblockspawn;			// [RK] Used to avoid ally spawn telefragging in coop
+
+	int			unblockspawn;			// [RK] Used for checking coop spawn blocking, set unblock_t above
 
 	byte        QueuePosition;            //Queue position to join game. 0 means not in queue
 

@@ -131,8 +131,8 @@ BOOL PIT_StompThing (AActor *thing)
 	if ((tmthing->player && thing->player) && (sv_unblockplayers || tmthing->player->unblockspawn))
 	{
 		// [RK] Player is not alone an is colliding with something
-		tmthing->player->unblockspawn = 2;
-		thing->player->unblockspawn = 2;
+		tmthing->player->unblockspawn = Unblock_Checked;
+		thing->player->unblockspawn = Unblock_Checked;
 
 		return true;
 	}
@@ -522,8 +522,8 @@ static BOOL PIT_CheckThing (AActor *thing)
 	    (sv_unblockplayers || tmthing->player->unblockspawn || thing->player->unblockspawn))
 	{
 		// [RK] Player is not alone an is colliding with something
-		tmthing->player->unblockspawn = 2;
-		thing->player->unblockspawn = 2;
+		tmthing->player->unblockspawn = Unblock_Checked;
+		thing->player->unblockspawn = Unblock_Checked;
 
 		return true;
 	}
